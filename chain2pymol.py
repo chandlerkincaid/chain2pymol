@@ -11,7 +11,7 @@ parser = argparse.ArgumentParser(description="Hello, this tool maps values from 
                                              "You can do this via the commands: 'sudo apt-get install unoconv' "
                                              "and 'unoconv -f .txt mychainoutput.rtf'. "
                                              "PLEASE DOUBLE CHECK YOUR RESULTS! rtf conversion can be an unreliable process. "
-                                             "Example: main.py -g f -m c /home/me/Documents/chain2pymol/chainOut.txt /home/me/Documents/chain2pymol/myPymol.pdb HUMAN /home/chan/Documents/chain2pymol/")
+                                             "Example: main.py -g f -m c /home/me/Documents/chain2pymol/chainOut.txt /home/me/Documents/chain2pymol/myPymol.pdb HUMAN /home/me/Documents/chain2pymol/")
 parser.add_argument("chainIn", help="specify absolute path and name for input file .txt")
 parser.add_argument("pdbIn", help="specify absolute path and name for input .pdb")
 parser.add_argument("target", help="a keyword contained in the sequence in the rtf that matches the pdb, your query (case sensitive)")
