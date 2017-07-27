@@ -3,9 +3,8 @@
 import argparse
 import re
 import os.path
-import sys
-import subprocess
 
+#This section descibes bash input and help text
 parser = argparse.ArgumentParser(description="Hello, this tool maps values from the CHAIN program output to a PDB file viewable in Pymol. "
                                              "You will need to convert the RTF to TXT using 'unoconv'. "
                                              "You can do this via the commands: 'sudo apt-get install unoconv' "
@@ -28,6 +27,7 @@ InsertCounter = 0
 DeleteCounter = 0
 TargetCounter = 0
 
+#empty strings which we add our parsed text to
 BackWeight = ""
 BackInsert = ""
 BackDelete = ""
@@ -38,11 +38,12 @@ ForeDelete = ""
 TargetName = args.target
 TargetSequence = ""
 
+#Text parsing the converted chain.rtf
 for index, line in enumerate(lines):
     if "wt_res_freqs" in line:
         WeightCounter += 1
         if WeightCounter % 2 == 0:
-            ForeWeight += line[21:]
+            ForeWeight += line[21:]#These indices may need to be altered for different versions of chain or OpenOffice
         else: BackWeight += line[21:124] + "\n"
     if "insertions" in line:
         InsertCounter += 1
@@ -61,6 +62,7 @@ for index, line in enumerate(lines):
 
 lengthTotal = len(BackWeight) - 1
 
+#Transform our parsed string to remove som special characters etc
 BackWeight = BackWeight.replace(" ", "0").replace("\n", "").replace("\t", "")
 ForeWeight = ForeWeight.replace(" ", "0").replace("\n", "").replace("\t", "")
 BackInsert = BackInsert.replace(" ", "0").replace("\n", "").replace("\t", "")
@@ -69,6 +71,7 @@ BackDelete = BackDelete[:lengthTotal].replace(" ", "0").replace("\n", "").replac
 ForeDelete = ForeDelete[:lengthTotal].replace(" ", "0").replace("\n", "").replace("\t", "")
 TargetSequence = re.sub(r'\d', "", TargetSequence).replace("\t", "").replace("\n", "")[:-1]
 
+#logic function for bash input
 if args.group == "f":
     if args.metric == "c":
         DesiredMetric = ForeWeight
@@ -90,10 +93,12 @@ elif args.group == "b":
 else:
     print "incorrect group argument, see --help"
 
+#combine our sequence with our metric, remove indices in both where the sequence contains a gap
 combined = zip(TargetSequence, DesiredMetric)
 filtered = filter(lambda (a, b): a != '-' or '*' or '.', combined)
 TargetSequence, DesiredMetric = zip(*filtered)
 
+#parse the pdb, find where the atom section is
 pdbFile = open(args.pdbIn, "r")
 pdbLines = pdbFile.read().splitlines()
 StartIndex = 0
@@ -121,6 +126,7 @@ Interval = StopIndex - StartIndex
 currentResidue = 0
 newAtomBlock = ""
 
+#Change b-factor in atom section
 for atomIndex, atomline in enumerate(AtomBlock):
     if "TER" in atomline:
         newAtomBlock += atomline + "\n"
@@ -128,7 +134,7 @@ for atomIndex, atomline in enumerate(AtomBlock):
         currentResidue = int(atomline[23:26].replace(" ", ""))
         newAtomBlock += atomline[:61] + DesiredMetric[currentResidue - 1] + "0.00" + atomline[66:78] + "\n"
 
-
+#stitch it all together and write it out
 toFile = "\n".join(pdbLines[:StartIndex]) + "\n" + newAtomBlock + "\n".join(pdbLines[TotalBlockLength + StartIndex:])
 
 f = open(os.path.join(args.output, os.path.basename('toolOut.pdb')), 'w')
