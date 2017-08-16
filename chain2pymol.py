@@ -99,6 +99,11 @@ combined = zip(TargetSequence, DesiredMetric)
 filtered = filter(lambda a_b: a_b[0] != '-' or '*' or '.', combined)
 TargetSequence, DesiredMetric = zip(*filtered)
 
+print("Target Sequence:")
+print(TargetSequence)
+print("Metric")
+print(DesiredMetric)
+
 #parse the pdb, find where the atom section is
 pdbFile = open(args.pdbIn, "r")
 pdbLines = pdbFile.read().splitlines()
