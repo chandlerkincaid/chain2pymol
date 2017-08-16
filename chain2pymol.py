@@ -3,7 +3,7 @@
 import argparse
 import re
 import os.path
-
+#updated for python 3, print statements and tuple unpacking changed
 #This section descibes bash input and help text
 parser = argparse.ArgumentParser(description="Hello, this tool maps values from the CHAIN program output to a PDB file viewable in Pymol. "
                                              "You will need to convert the RTF to TXT using 'unoconv'. "
@@ -80,7 +80,7 @@ if args.group == "f":
     elif args.metric == "d":
         DesiredMetric = ForeDelete
     else:
-        print "incorrect metric argument, see --help"
+        print ("incorrect metric argument, see --help")
 elif args.group == "b":
     if args.metric == "c":
         DesiredMetric = BackWeight
@@ -89,13 +89,14 @@ elif args.group == "b":
     elif args.metric == "d":
         DesiredMetric = BackDelete
     else:
-        print "incorrect metric argument, see --help"
+        print ("incorrect metric argument, see --help")
 else:
-    print "incorrect group argument, see --help"
+    print ("incorrect group argument, see --help")
 
 #combine our sequence with our metric, remove indices in both where the sequence contains a gap
 combined = zip(TargetSequence, DesiredMetric)
-filtered = filter(lambda (a, b): a != '-' or '*' or '.', combined)
+#python 3 removes tuple unpacking :( so this is rewritten
+filtered = filter(lambda a_b: a_b[0] != '-' or '*' or '.', combined)
 TargetSequence, DesiredMetric = zip(*filtered)
 
 #parse the pdb, find where the atom section is
@@ -141,4 +142,4 @@ f = open(os.path.join(args.output, os.path.basename('toolOut.pdb')), 'w')
 f.write(toFile)
 f.close()
 
-print "complete!"
+print ("complete!")
