@@ -43,22 +43,22 @@ for index, line in enumerate(lines):
     if "wt_res_freqs" in line:
         WeightCounter += 1
         if WeightCounter % 2 == 0:
-            ForeWeight += line[21:]#These indices may need to be altered for different versions of chain or OpenOffice
-        else: BackWeight += line[21:124] + "\n"
+            ForeWeight += line.split('\t')[2]#These indices may need to be altered for different versions of chain or OpenOffic
+        else: BackWeight += line.split('\t')[2]
     if "insertions" in line:
         InsertCounter += 1
         if InsertCounter % 2 == 0:
-            ForeInsert += line[12:]
-        else: BackInsert += line[12:]
+            ForeInsert += line.split('\t')[2]
+        else: BackInsert += line.split('\t')[2]
     if "deletions" in line:
         DeleteCounter += 1
         if DeleteCounter % 2 == 0:
-            ForeDelete += line[11:114]
-        else: BackDelete += line[11:114]
+            ForeDelete += line.split('\t')[2]
+        else: BackDelete += line.split('\t')[2]
     if TargetName in line:
         TargetCounter += 1
         if TargetCounter % 3 == 0:
-            TargetSequence += line[17:124] + "\n"
+            TargetSequence += line.split('\t')[2]
 
 lengthTotal = len(BackWeight) - 1
 
