@@ -93,16 +93,23 @@ elif args.group == "b":
 else:
     print ("incorrect group argument, see --help")
 
+#function for removing gaps in output sequence
+def charFilter(seq):
+    if seq == '-' or seq == '*' or seq == '.':
+        return False
+    else:
+        return True
+
 #combine our sequence with our metric, remove indices in both where the sequence contains a gap
 combined = zip(TargetSequence, DesiredMetric)
 #python 3 removes tuple unpacking :( so this is rewritten
-filtered = filter(lambda a_b: a_b[0] != '-' or '*' or '.', combined)
+filtered = filter(lambda a_b: charFilter(a_b[0]), combined)
 TargetSequence, DesiredMetric = zip(*filtered)
 
 print("Target Sequence:")
-print(TargetSequence)
+print(''.join(TargetSequence))
 print("Metric")
-print(DesiredMetric)
+print(''.join(DesiredMetric))
 
 #parse the pdb, find where the atom section is
 pdbFile = open(args.pdbIn, "r")
