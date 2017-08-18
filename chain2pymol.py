@@ -148,6 +148,7 @@ for atomIndex, atomline in enumerate(AtomBlock):
             currentResidue = int(atomline[23:26].replace(" ", ""))
             newAtomBlock += atomline[:61] + DesiredMetric[currentResidue - 1] + "0.00" + atomline[66:78] + "\n"
         except:
+            newAtomBlock += atomline + "FIX THIS?" + "\n"
             print("Something is off at Residue: " + currentResidue)
 
 #stitch it all together and write it out
