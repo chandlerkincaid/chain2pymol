@@ -149,7 +149,7 @@ for atomIndex, atomline in enumerate(AtomBlock):
             newAtomBlock += atomline[:61] + DesiredMetric[currentResidue - 1] + "0.00" + atomline[66:78] + "\n"
         except:
             newAtomBlock += atomline + "FIX THIS?" + "\n"
-            print("Something is off at Residue: " + currentResidue)
+            print("Something is off at Residue: " + str(currentResidue))
 
 #stitch it all together and write it out
 toFile = "\n".join(pdbLines[:StartIndex]) + "\n" + newAtomBlock + "\n".join(pdbLines[TotalBlockLength + StartIndex:])
