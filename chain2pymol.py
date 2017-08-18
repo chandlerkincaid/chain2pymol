@@ -108,7 +108,7 @@ TargetSequence, DesiredMetric = zip(*filtered)
 
 print("Target Sequence:")
 print(''.join(TargetSequence))
-print("Metric")
+print("Metric:")
 print(''.join(DesiredMetric))
 
 #parse the pdb, find where the atom section is
@@ -144,8 +144,11 @@ for atomIndex, atomline in enumerate(AtomBlock):
     if "TER" in atomline:
         newAtomBlock += atomline + "\n"
     else:
-        currentResidue = int(atomline[23:26].replace(" ", ""))
-        newAtomBlock += atomline[:61] + DesiredMetric[currentResidue - 1] + "0.00" + atomline[66:78] + "\n"
+        try:#todo fix this indexing
+            currentResidue = int(atomline[23:26].replace(" ", ""))
+            newAtomBlock += atomline[:61] + DesiredMetric[currentResidue - 1] + "0.00" + atomline[66:78] + "\n"
+        except:
+            print("Something is off at Residue: " + currentResidue)
 
 #stitch it all together and write it out
 toFile = "\n".join(pdbLines[:StartIndex]) + "\n" + newAtomBlock + "\n".join(pdbLines[TotalBlockLength + StartIndex:])
